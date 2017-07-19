@@ -2,6 +2,8 @@ package server
 
 import "net/http"
 
-func RegisterHandlers(w http.ResponseWriter, request *http.Request) {
-	w.WriteHeader(http.StatusOK)
+func RegisterHome() http.HandlerFunc {
+	return func(w http.ResponseWriter, request *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}
 }
