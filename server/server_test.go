@@ -27,13 +27,13 @@ var _ = Describe("Server", func() {
 			})
 
 			Context("Basic request", func() {
-				BeforeEach(func() {
-					router.HandleFunc(prefix, server.RegisterHome()).Methods("GET")
+				It("returns status code of StatusOK (200)", func() {
+					server.RegisterHandlers()
+
 					req, _ = http.NewRequest(http.MethodGet, prefix, nil)
 					resp = httptest.NewRecorder()
 					router.ServeHTTP(resp, req)
-				})
-				It("returns status code of StatusOK (200)", func() {
+
 					Expect(resp.Code).To(Equal(200))
 				})
 			})
