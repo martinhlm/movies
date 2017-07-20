@@ -1,7 +1,7 @@
 package server_test
 
 import (
-	"app/server"
+	"movies/server"
 	"net/http"
 	"net/http/httptest"
 
