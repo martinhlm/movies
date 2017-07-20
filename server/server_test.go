@@ -13,7 +13,7 @@ import (
 var _ = Describe("Server", func() {
 	var (
 		router *mux.Router
-		req    *http.Request
+		//req    *http.Request
 		resp   *httptest.ResponseRecorder
 		prefix string
 	)
@@ -22,19 +22,17 @@ var _ = Describe("Server", func() {
 
 		Context("When client send request to path prefix", func() {
 			BeforeEach(func() {
-				router = mux.NewRouter()
-				prefix = "/v1/movies"
+				router = server.RegisterHandlers()
+				prefix = "/v1/movies/"
 			})
 
 			Context("Basic request", func() {
 				It("returns status code of StatusOK (200)", func() {
-					server.RegisterHandlers()
-
-					req, _ = http.NewRequest(http.MethodGet, prefix, nil)
+					req, _ := http.NewRequest(http.MethodGet, "/v1/movies/", nil)
 					resp = httptest.NewRecorder()
 					router.ServeHTTP(resp, req)
 
-					Expect(resp.Code).To(Equal(200))
+					Expect(resp.Code).To(Equal(http.StatusOK))
 				})
 			})
 
