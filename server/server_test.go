@@ -23,7 +23,7 @@ var _ = Describe("Server", func() {
 		Context("When client send request to path prefix", func() {
 			BeforeEach(func() {
 				router = server.RegisterHandlers()
-				prefix = "/v1/movies/"
+				prefix = "/v1/movies?language=en-US"
 			})
 
 			Context("Basic request", func() {

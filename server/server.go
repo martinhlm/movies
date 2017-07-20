@@ -1,11 +1,9 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"movies/keys"
-	"movies/models"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -28,18 +26,12 @@ type badRequest struct{ error }
 
 // ListMovies get a list for dicover movies
 func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
-	params := &models.Movie{
-		keys.API_KEY,
-		"en-US",
-		"popularity.desc",
-		false,
-		false,
-		"",
-		1,
-	}
+	//params := &models.Movie{}
 
-	foo, _ := json.Marshal(params)
-	fmt.Println(string(foo))
+	fmt.Println(r.URL.RequestURI())
+
+	//foo, _ := json.Marshal(params)
+	//fmt.Println(string(foo))
 
 	url := keys.PATH_API_TMD + "discover/movie?" +
 		"api_key=912f66ded3f67606bc9ca4503e68c8c1&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1"
