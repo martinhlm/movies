@@ -1,7 +1,11 @@
 package server
 
 import (
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"movies/keys"
+	"movies/models"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -9,9 +13,6 @@ import (
 
 // PathPrefix for server api
 const PathPrefix = "/v1/movies/"
-
-// API_KEY for The Movie DB
-const API_KEY = "912f66ded3f67606bc9ca4503e68c8c1"
 
 // RegisterHandlers create all server api handlers
 func RegisterHandlers() *mux.Router {
@@ -27,7 +28,21 @@ type badRequest struct{ error }
 
 // ListMovies get a list for dicover movies
 func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
-	url := "https://api.themoviedb.org/3/discover/movie?api_key=912f66ded3f67606bc9ca4503e68c8c1&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1"
+	params := &models.Movie{
+		keys.API_KEY,
+		"en-US",
+		"popularity.desc",
+		false,
+		false,
+		"",
+		1,
+	}
+
+	foo, _ := json.Marshal(params)
+	fmt.Println(string(foo))
+
+	url := keys.PATH_API_TMD + "discover/movie?" +
+		"api_key=912f66ded3f67606bc9ca4503e68c8c1&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1"
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
