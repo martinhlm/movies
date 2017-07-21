@@ -26,20 +26,15 @@ type badRequest struct{ error }
 
 // ListMovies get a list for dicover movies
 func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
-	//params := &models.Movie{}
-
 	params := r.URL.Query()
-	for i, param := range params {
-		fmt.Println(i)
-		fmt.Println(param)
+	url := keys.PATH_API_TMD + "discover/movie?" + "api_key=" + keys.API_KEY
+
+	for param, value := range params {
+		url += "&" + param + "=" + value[0]
+		//fmt.Println(param)
+		//fmt.Println(value[0])
 	}
-	//fmt.Println(params.Get("language"))
-
-	//foo, _ := json.Marshal(params)
-	//fmt.Println(string(foo))
-
-	url := keys.PATH_API_TMD + "discover/movie?" +
-		"api_key=912f66ded3f67606bc9ca4503e68c8c1&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1"
+	fmt.Println(url)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

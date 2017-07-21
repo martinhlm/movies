@@ -23,12 +23,17 @@ var _ = Describe("Server", func() {
 		Context("When client send request to path prefix", func() {
 			BeforeEach(func() {
 				router = server.RegisterHandlers()
-				prefix = "/v1/movies?language=en-US"
+				prefix = "/v1/movies"
 			})
 
 			Context("Basic request", func() {
 				It("returns status code of StatusOK (200)", func() {
-					req, _ := http.NewRequest(http.MethodGet, prefix, nil)
+					params := "?language=en-US" +
+						"&sort_by=popularity.desc" +
+						"&include_adult=false" +
+						"&include_video=false" +
+						"&page=1"
+					req, _ := http.NewRequest(http.MethodGet, prefix+params, nil)
 					resp = httptest.NewRecorder()
 					router.ServeHTTP(resp, req)
 
