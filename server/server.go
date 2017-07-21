@@ -14,21 +14,43 @@ const PathPrefix = "/v1/movies"
 
 // RegisterHandlers create all server api handlers
 func RegisterHandlers() http.Handler {
-	//r := mux.NewRouter()
-	//r.HandleFunc(PathPrefix, ListMoviesDiscover).Methods("GET")
-
 	return NewRouter()
 }
 
 func NewRouter() *mux.Router {
 	router := mux.NewRouter()
-	router.HandleFunc(PathPrefix, ListMoviesDiscover).Methods("GET")
+	router.HandleFunc(PathPrefix, ListMoviesDiscover).Methods(http.MethodGet)
+	router.HandleFunc(PathPrefix+"/{movie_id}", GetMovie).Methods(http.MethodGet)
 
 	return router
 }
 
 // badRequest is handled by setting the status code in the reply to StatusBadRequest.
 type badRequest struct{ error }
+
+// notFound is handled by setting the status code in the reply to StatusNotFound.
+type notFound struct{ error }
+
+// errorHandler wraps a function returning an error by handling the error and returning a http.Handler.
+// If the error is of the one of the types defined above, it is handled as described for every type.
+// If the error is of another type, it is considered as an internal error and its message is logged.
+func errorHandler(f func(w http.ResponseWriter, r *http.Request) error) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := f(w, r)
+		if err == nil {
+			return
+		}
+		switch err.(type) {
+		case badRequest:
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		case notFound:
+			http.Error(w, "task not found", http.StatusNotFound)
+		default:
+			log.Println(err)
+			http.Error(w, "oops", http.StatusInternalServerError)
+		}
+	}
+}
 
 // ListMovies get a list for dicover movies
 func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
@@ -64,4 +86,8 @@ func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+}
+
+func GetMovie(w http.ResponseWriter, r *http.Request) {
+
 }
