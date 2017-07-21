@@ -2,6 +2,7 @@ package server
 
 import (
 	"io/ioutil"
+	"log"
 	"movies/keys"
 	"net/http"
 
@@ -41,19 +42,23 @@ func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
+		http.Error(w, "not found", http.StatusNotFound)
 		return
 	}
 
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
+		http.Error(w, "server error", http.StatusInternalServerError)
 		return
 	}
 
