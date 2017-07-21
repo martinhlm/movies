@@ -13,52 +13,68 @@ import (
 var _ = Describe("Server", func() {
 	var (
 		router *mux.Router
+		resp   *httptest.ResponseRecorder
 		prefix string
 	)
 
 	Describe("Requests controller", func() {
 
-		Context("When client send request to path prefix", func() {
+		Describe("When client send request to path prefix", func() {
 			BeforeEach(func() {
 				router = server.NewRouter()
+				resp = httptest.NewRecorder()
 			})
 
-			Context("Basic request without params to discover movies", func() {
-				It("returns status code of StatusOK (200)", func() {
-					prefix = "/v1/movies"
-					req, _ := http.NewRequest(http.MethodGet, prefix, nil)
-					resp := httptest.NewRecorder()
-					router.ServeHTTP(resp, req)
+			Context("Movie Discover", func() {
 
-					Expect(resp.Code).To(Equal(http.StatusOK))
+				Context("Basic request without params to discover movies", func() {
+					It("returns status code of StatusOK (200)", func() {
+						prefix = "/v1/movies"
+						req, _ := http.NewRequest(http.MethodGet, prefix, nil)
+						router.ServeHTTP(resp, req)
+
+						Expect(resp.Code).To(Equal(http.StatusOK))
+					})
 				})
-			})
 
-			Context("Request with params to discover movies", func() {
-				It("returns status code of StatusOK", func() {
-					prefix = "/v1/movies"
-					params := "?language=en-US" +
-						"&sort_by=popularity.desc" +
-						"&include_adult=false" +
-						"&include_video=false" +
-						"&page=1"
-					req, _ := http.NewRequest(http.MethodGet, prefix+params, nil)
-					resp := httptest.NewRecorder()
-					router.ServeHTTP(resp, req)
+				Context("Request with params to discover movies", func() {
+					It("returns status code of StatusOK", func() {
+						prefix = "/v1/movies"
+						params := "?language=en-US" +
+							"&sort_by=popularity.desc" +
+							"&include_adult=false" +
+							"&include_video=false" +
+							"&page=1"
+						req, _ := http.NewRequest(http.MethodGet, prefix+params, nil)
+						router.ServeHTTP(resp, req)
 
-					Expect(resp.Code).To(Equal(http.StatusOK))
+						Expect(resp.Code).To(Equal(http.StatusOK))
+					})
 				})
+
+				Context("Request discover movies post", func() {
+					It("then should return not found status", func() {
+						prefix = "/v1/movies"
+						params := "?lang=ET"
+						req, _ := http.NewRequest(http.MethodPost, prefix+params, nil)
+						router.ServeHTTP(resp, req)
+
+						Expect(resp.Code).To(Equal(http.StatusNotFound))
+					})
+				})
+
 			})
 
-			Context("Request discover movies post", func() {
-				It("then should return not found status", func() {
-					prefix = "/v1/movies"
-					params := "?lang=ET"
-					req, _ := http.NewRequest(http.MethodPost, prefix+params, nil)
-					resp := httptest.NewRecorder()
-					router.ServeHTTP(resp, req)
+			Context("Get single movie", func() {
+				Context("Request single movie with bad ID", func() {
+					It("then should return not found", func() {
+						prefix = "/v1/movies/"
+						movie_id := 324852
+						req, _ := http.NewRequest(http.MethodPost, prefix+string(movie_id), nil)
+						router.ServeHTTP(resp, req)
 
-					Expect(resp.Code).To(Equal(http.StatusNotFound))
+						Expect(resp.Code).To(Equal(http.StatusOK))
+					})
 				})
 			})
 
