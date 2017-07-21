@@ -28,7 +28,7 @@ var _ = Describe("Server", func() {
 
 			Context("Basic request", func() {
 				It("returns status code of StatusOK (200)", func() {
-					req, _ := http.NewRequest(http.MethodGet, "/v1/movies/", nil)
+					req, _ := http.NewRequest(http.MethodGet, prefix, nil)
 					resp = httptest.NewRecorder()
 					router.ServeHTTP(resp, req)
 

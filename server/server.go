@@ -10,7 +10,7 @@ import (
 )
 
 // PathPrefix for server api
-const PathPrefix = "/v1/movies/"
+const PathPrefix = "/v1/movies"
 
 // RegisterHandlers create all server api handlers
 func RegisterHandlers() *mux.Router {
@@ -28,7 +28,12 @@ type badRequest struct{ error }
 func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
 	//params := &models.Movie{}
 
-	fmt.Println(r.URL.RequestURI())
+	params := r.URL.Query()
+	for i, param := range params {
+		fmt.Println(i)
+		fmt.Println(param)
+	}
+	//fmt.Println(params.Get("language"))
 
 	//foo, _ := json.Marshal(params)
 	//fmt.Println(string(foo))
