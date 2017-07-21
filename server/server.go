@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"io/ioutil"
 	"movies/keys"
 	"net/http"
@@ -13,12 +12,18 @@ import (
 const PathPrefix = "/v1/movies"
 
 // RegisterHandlers create all server api handlers
-func RegisterHandlers() *mux.Router {
-	r := mux.NewRouter()
-	r.HandleFunc(PathPrefix, ListMoviesDiscover).Methods("GET")
-	http.Handle(PathPrefix, r)
+func RegisterHandlers() http.Handler {
+	//r := mux.NewRouter()
+	//r.HandleFunc(PathPrefix, ListMoviesDiscover).Methods("GET")
 
-	return r
+	return NewRouter()
+}
+
+func NewRouter() *mux.Router {
+	router := mux.NewRouter()
+	router.HandleFunc(PathPrefix, ListMoviesDiscover).Methods("GET")
+
+	return router
 }
 
 // badRequest is handled by setting the status code in the reply to StatusBadRequest.
@@ -31,10 +36,7 @@ func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) {
 
 	for param, value := range params {
 		url += "&" + param + "=" + value[0]
-		//fmt.Println(param)
-		//fmt.Println(value[0])
 	}
-	fmt.Println(url)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

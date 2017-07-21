@@ -13,8 +13,6 @@ import (
 var _ = Describe("Server", func() {
 	var (
 		router *mux.Router
-		//req    *http.Request
-		resp   *httptest.ResponseRecorder
 		prefix string
 	)
 
@@ -22,19 +20,30 @@ var _ = Describe("Server", func() {
 
 		Context("When client send request to path prefix", func() {
 			BeforeEach(func() {
-				router = server.RegisterHandlers()
+				router = server.NewRouter()
 				prefix = "/v1/movies"
 			})
 
-			Context("Basic request", func() {
+			Context("Basic request without params to discover movies", func() {
 				It("returns status code of StatusOK (200)", func() {
+					req, _ := http.NewRequest(http.MethodGet, prefix, nil)
+					resp := httptest.NewRecorder()
+					router.ServeHTTP(resp, req)
+
+					//resp, _ := http.DefaultClient.Do(req)
+					Expect(resp.Code).To(Equal(http.StatusOK))
+				})
+			})
+
+			Context("Request with params to discover movies", func() {
+				It("returns status code of StatusOK", func() {
 					params := "?language=en-US" +
 						"&sort_by=popularity.desc" +
 						"&include_adult=false" +
 						"&include_video=false" +
 						"&page=1"
 					req, _ := http.NewRequest(http.MethodGet, prefix+params, nil)
-					resp = httptest.NewRecorder()
+					resp := httptest.NewRecorder()
 					router.ServeHTTP(resp, req)
 
 					Expect(resp.Code).To(Equal(http.StatusOK))
