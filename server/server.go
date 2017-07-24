@@ -6,6 +6,7 @@ import (
 	"log"
 	"movies/keys"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -57,15 +58,10 @@ func errorHandler(f func(w http.ResponseWriter, r *http.Request) error) http.Han
 	}
 }
 
-// ListMovies get a list for dicover movies
-func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) error {
-	url := keys.PATH_API_TMD + "discover/movie?" + "api_key=" + keys.API_KEY
-	params := r.URL.Query()
-	for n, v := range params {
-		url += "&" + n + "=" + v[0]
-	}
-
-	req, err := http.NewRequest("GET", url, nil)
+// newRequest generic request function
+// m httpMethod
+func newRequest(m string, url string, w http.ResponseWriter) error {
+	req, err := http.NewRequest(m, url, nil)
 	if err != nil {
 		return badRequest{}
 	}
@@ -83,13 +79,33 @@ func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) error {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(body)
+	fmt.Println(string(body))
+	fmt.Println("-------")
 	return nil
 }
 
+// ListMoviesDiscover get a list for dicover movies
+func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) error {
+	url := keys.PATH_API_TMD + "discover/movie?" + "api_key=" + keys.API_KEY
+	params := r.URL.Query()
+	for n, v := range params {
+		url += "&" + n + "=" + v[0]
+	}
+
+	return newRequest(http.MethodGet, url, w)
+}
+
+// GetMovie request single movie info given the id
 func GetMovie(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println("path: " + r.URL.Path)
+	var id string
+	s := strings.Split(r.URL.Path, "/")
 
-	//url := keys.PATH_API_TMD + "movie/"
+	for i := range s {
+		id = s[i]
+	}
+	fmt.Println(id)
 
-	return nil
+	url := keys.PATH_API_TMD + "movie/" + id + "?api_key=" + keys.API_KEY
+
+	return newRequest(http.MethodGet, url, w)
 }

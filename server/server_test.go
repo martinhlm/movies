@@ -68,11 +68,9 @@ var _ = Describe("Server", func() {
 			Context("Get single movie", func() {
 				Context("Request single movie with ID", func() {
 					It("then should return StatusOK", func() {
-						prefix = "/v1/movies/"
-						movie_id := 324852
+						id := "324852"
 						req, _ := http.NewRequest(http.MethodGet,
-							prefix+string(movie_id), nil)
-						//prefix, nil)
+							"/v1/movies/"+id, nil)
 						router.ServeHTTP(resp, req)
 
 						Expect(resp.Code).To(Equal(http.StatusOK))
