@@ -66,7 +66,7 @@ var _ = Describe("Server", func() {
 			})
 
 			Context("Get single movie", func() {
-				Context("Request single movie with ID", func() {
+				Describe("Request single movie with ID", func() {
 					It("then should return StatusOK", func() {
 						id := "324852"
 						req, _ := http.NewRequest(http.MethodGet,

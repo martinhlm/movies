@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"movies/keys"
@@ -34,6 +33,9 @@ type badRequest struct{ error }
 // notFound is handled by setting the status code in the reply to StatusNotFound.
 type notFound struct{ error }
 
+// notAuthorized is handled by setting the status code in the reply to StatusUnauthorized
+type notAuthorized struct{ error }
+
 // errorHandler wraps a function returning an error by handling the error and
 // returning a http.Handler.
 // If the error is of the one of the types defined above, it is handled as
@@ -50,7 +52,9 @@ func errorHandler(f func(w http.ResponseWriter, r *http.Request) error) http.Han
 		case badRequest:
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		case notFound:
-			http.Error(w, "task not found", http.StatusNotFound)
+			http.Error(w, "Task not found", http.StatusNotFound)
+		case notAuthorized:
+			http.Error(w, "Invalid API key", http.StatusUnauthorized)
 		default:
 			log.Println(err)
 			http.Error(w, "oops", http.StatusInternalServerError)
@@ -69,6 +73,8 @@ func newRequest(m string, url string, w http.ResponseWriter) error {
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return notFound{}
+	} else if res.StatusCode == http.StatusUnauthorized {
+		return notAuthorized{}
 	}
 
 	defer res.Body.Close()
@@ -77,10 +83,8 @@ func newRequest(m string, url string, w http.ResponseWriter) error {
 		return err
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(res.StatusCode)
 	w.Write(body)
-	fmt.Println(string(body))
-	fmt.Println("-------")
 	return nil
 }
 
@@ -99,11 +103,9 @@ func ListMoviesDiscover(w http.ResponseWriter, r *http.Request) error {
 func GetMovie(w http.ResponseWriter, r *http.Request) error {
 	var id string
 	s := strings.Split(r.URL.Path, "/")
-
 	for i := range s {
 		id = s[i]
 	}
-	fmt.Println(id)
 
 	url := keys.PATH_API_TMD + "movie/" + id + "?api_key=" + keys.API_KEY
 
