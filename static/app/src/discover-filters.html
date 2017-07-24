@@ -10,6 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<!-- Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it -->
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 
 <dom-module id="discover-filters">
   <template>
@@ -17,13 +22,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
 
-        padding: 10px;
+        padding: 1px;
       }
     </style>
 
-    <div class="card">
-      <div class="circle">F</div>
-      <h1>Filters</h1>
+    <div class="bar">
+      <a class="filters">Filters:</a>
+      <paper-dropdown-menu label="Sort by">
+          <paper-listbox slot="dropdown-content" class="dropdown-content">
+              <paper-item>popularity.desc</paper-item>
+              <paper-item>popularity.asc</paper-item>
+              <paper-item>release_date.desc</paper-item>
+              <paper-item>release_date.asc</paper-item>
+              <paper-item>revenue.desc</paper-item>
+              <paper-item>revenue.asc</paper-item>
+              <paper-item>primary_release_date.desc</paper-item>
+              <paper-item>primary_release_date.asc</paper-item>
+              <paper-item>vote_average.desc</paper-item>
+              <paper-item>vote_average.asc</paper-item>
+          </paper-listbox>
+      </paper-dropdown-menu>
+      <a>genre</a>
+      <a>year</a>
     </div>
   </template>
 
@@ -34,4 +54,4 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     window.customElements.define(DiscoverFilters.is, DiscoverFilters);
   </script>
-<
+</dom-module>
