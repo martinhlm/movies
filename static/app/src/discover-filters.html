@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
 
 <dom-module id="discover-filters">
   <template>
@@ -42,7 +43,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <paper-item>vote_average.asc</paper-item>
           </paper-listbox>
       </paper-dropdown-menu>
-      <a>genre</a>
+      <paper-dropdown-menu label="Genre">
+          <paper-listbox slot="dropdown-content" class="dropdown-content">
+              <paper-item value="28">Action</paper-item>
+              <paper-item value="12">Adventure</paper-item>
+              <paper-item value="16">Animation</paper-item>
+              <paper-item value="35">Comedy</paper-item>
+              <paper-item value="80">Crime</paper-item>
+              <paper-item value="99">Documentary</paper-item>
+              <paper-item value="18">Drama</paper-item>
+              <paper-item value="10751">Family</paper-item>
+              <paper-item value="27">Horror</paper-item>
+              <paper-item value="10749">Romance</paper-item>
+              <paper-item value="">War</paper-item>
+          </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-input></paper-input>
       <a>year</a>
     </div>
   </template>
