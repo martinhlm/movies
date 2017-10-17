@@ -65,15 +65,17 @@ func updatePromotions(session *mgo.Session) error {
 		Title: "Otro título", Name: "Otro+título",
 	}}
 
-	promo := models.Promotion{
-		Title:    "promo titulo",
-		Name:     "promo+titulo",
-		Category: "month",
-		Image:    "some_image",
-		URL:      "some_url",
-	}
+	/*
+		promo := models.Promotion{
+			Title:    "promo titulo",
+			Name:     "promo+titulo",
+			Category: "month",
+			Image:    "some_image",
+			URL:      "some_url",
+		}
+	*/
 
-	err := promotions.Update(promo, change)
+	err := promotions.Update(models.Promotion{Title: "Un titulo"}, change)
 	if err != nil {
 		return err
 	}

@@ -3,8 +3,8 @@ package models
 // Promotion model
 type Promotion struct {
 	Title    string `bson:"title,omitempty"`
-	Name     string `bson:"name"`
-	Category string `bson:"category"`
-	Image    string `bson:"image"`
-	URL      string `bson:"url"`
+	Name     string `bson:"name,omitempty"`
+	Category string `bson:"category,omitempty"`
+	Image    string `bson:"image,omitempty"`
+	URL      string `bson:"url,omitempty"`
 }
