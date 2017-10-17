@@ -31,9 +31,16 @@ func Connect() {
 		}
 	*/
 
-	err = findPromotion(session)
+	/*
+		err = findPromotion(session)
+		if err != nil {
+			log.Printf("Error find promotion, go error: %v\n", err)
+		}
+	*/
+
+	err = iteratePromotions(session)
 	if err != nil {
-		log.Printf("Error find promotion, go error: %v\n", err)
+		log.Printf("Error iterating promotion, go error: %v\n", err)
 	}
 }
 
@@ -100,5 +107,18 @@ func findPromotion(session *mgo.Session) error {
 	}
 
 	fmt.Printf("Promotion %v\n", promo)
+	return nil
+}
+
+func iteratePromotions(session *mgo.Session) error {
+	promotions := session.DB("local").C("promotions")
+
+	iter := promotions.Find(nil).Iter()
+
+	var promo models.Promotion
+	for iter.Next(&promo) {
+		fmt.Printf("Promotion: %v\n", promo)
+	}
+
 	return nil
 }
