@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"log"
 	"movies/models"
 
@@ -23,9 +24,16 @@ func Connect() {
 		}
 	*/
 
-	err = updatePromotions(session)
+	/*
+		err = updatePromotions(session)
+		if err != nil {
+			log.Printf("Error update promotions, go error: %v\n", err)
+		}
+	*/
+
+	err = findPromotion(session)
 	if err != nil {
-		log.Printf("Error update promotions, go error: %v\n", err)
+		log.Printf("Error find promotion, go error: %v\n", err)
 	}
 }
 
@@ -79,5 +87,18 @@ func updatePromotions(session *mgo.Session) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func findPromotion(session *mgo.Session) error {
+	promotions := session.DB("local").C("promotions")
+
+	var promo models.Promotion
+	err := promotions.Find(models.Promotion{Title: "Otro título"}).One(&promo)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Promotion %v\n", promo)
 	return nil
 }
