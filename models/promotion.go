@@ -9,3 +9,9 @@ type Promotion struct {
 	URL      string   `bson:"url,omitempty"`
 	Tags     []string `bson:"tags,omitempty"`
 }
+
+// Author model
+type Author struct {
+	Name  string `bson:"name,omitempty"`
+	Email string `bson:"email,omitempty"`
+}
