@@ -6,6 +6,7 @@ import (
 	"movies/models"
 
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 type m map[string]interface{}
@@ -17,30 +18,14 @@ func Connect() {
 	session := dbSession()
 	var err error
 
-	/*
-		err = insertPromotions(session)
-		if err != nil {
-			fmt.Println("Insert success")
-		}
-	*/
-
-	/*
-		err = updatePromotions(session)
-		if err != nil {
-			log.Printf("Error update promotions, go error: %v\n", err)
-		}
-	*/
-
-	/*
-		err = findPromotion(session)
-		if err != nil {
-			log.Printf("Error find promotion, go error: %v\n", err)
-		}
-	*/
-
+	err = insertNestingPromotions(session)
 	err = iteratePromotions(session)
+	//err = findPromotion(session)
+	//err = insertPromotions(session)
+	//err = updatePromotions(session)
+
 	if err != nil {
-		log.Printf("Error iterating promotion, go error: %v\n", err)
+		log.Printf("Error, go error: %v\n", err)
 	}
 }
 
@@ -59,10 +44,13 @@ func dbSession() *mgo.Session {
 
 func insertPromotions(session *mgo.Session) error {
 	promotions := session.DB("local").C("promotions")
+	var arrays []string //:= ["one", "two", "three"]
+	arrays[0] = "one"
+
 	var promotionList = []models.Promotion{
-		{"promo titulo", "promo+titulo", "month", "some_image", "some_url"},
-		{"Promotion title", "Promotion+title", "dynamic", "some_url_image", "other_url"},
-		{"Promotion of dynamic", "Promotion+of+dynamic", "dynamic", "some_url_image", "other_url"},
+		{"promo titulo", "promo+titulo", "month", "some_image", "some_url", arrays},
+		{"Promotion title", "Promotion+title", "dynamic", "some_url_image", "other_url", arrays},
+		{"Promotion of dynamic", "Promotion+of+dynamic", "dynamic", "some_url_image", "other_url", arrays},
 	}
 
 	for _, promotion := range promotionList {
@@ -120,5 +108,24 @@ func iteratePromotions(session *mgo.Session) error {
 		fmt.Printf("Promotion: %v\n", promo)
 	}
 
+	return nil
+}
+
+func insertNestingPromotions(session *mgo.Session) error {
+	promotions := session.DB("local").C("promotions")
+	m := map[string]interface{}{
+		"title": "nesting title",
+		"name":  "nesting+title",
+		"tags":  []string{"face", "skin"},
+		"author": bson.M{
+			"name":  "Martin",
+			"email": "martin@fadermex",
+		},
+	}
+
+	err := promotions.Insert(m)
+	if err != nil {
+		return err
+	}
 	return nil
 }
