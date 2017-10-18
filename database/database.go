@@ -18,9 +18,10 @@ func Connect() {
 	session := dbSession()
 	var err error
 
-	err = indexingPromotions(session)
+	err = concurrentPromotions(session)
+	//err = indexingPromotions(session)
 	//err = insertNestingPromotions(session)
-	err = iteratePromotions(session)
+	//err = iteratePromotions(session)
 	//err = findPromotion(session)
 	//err = insertPromotions(session)
 	//err = updatePromotions(session)
@@ -143,4 +144,28 @@ func indexingPromotions(session *mgo.Session) error {
 	err = promotions.EnsureIndexKey("author.name")
 
 	return err
+}
+
+func concurrentPromotions(session *mgo.Session) error {
+	promotions := session.DB("local").C("promotions")
+
+	done := make(chan error)
+
+	go f(promotions, "nesting title", done)
+	go f(promotions, "Promotion title", done)
+
+	//if err = firstError(2, done); err != nil {
+	//return err
+	//}
+	return nil
+}
+
+func f(promotions *mgo.Collection, title string, done chan error) {
+	var promotion models.Promotion
+	err := promotions.Find(models.Promotion{Title: title}).One(&promotion)
+	if err != nil {
+		fmt.Printf("Promotion: %v\n", promotion)
+	}
+
+	done <- err
 }
