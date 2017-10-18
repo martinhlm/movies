@@ -18,13 +18,13 @@ func Connect() {
 	session := dbSession()
 	var err error
 
-	//err = insertPromotions(session)
+	err = insertPromotions(session)
 	//err = updatePromotions(session)
 	//err = findPromotion(session)
 	//err = iteratePromotions(session)
 	//err = insertNestingPromotions(session)
 	//err = indexingPromotions(session)
-	err = concurrentPromotions(session)
+	//err = concurrentPromotions(session)
 
 	if err != nil {
 		log.Printf("Error, go error: %v\n", err)
@@ -46,16 +46,21 @@ func dbSession() *mgo.Session {
 
 func insertPromotions(session *mgo.Session) error {
 	promotions := session.DB("local").C("promotions")
-	var arrays []string //:= ["one", "two", "three"]
-	arrays[0] = "one"
+	arrays := []string{"face", "skin"}
 
 	var promotionList = []models.Promotion{
-		{"promo titulo", "promo+titulo", "month", "some_image", "some_url",
-			arrays, models.Author{"", ""}},
-		{"Promotion title", "Promotion+title", "dynamic", "some_url_image",
-			"other_url", arrays, models.Author{"", ""}},
+		{"Promotion title", "Promotion+title", "month", "images/promo_1.png",
+			"some_url", arrays, models.Author{"Martin", "martin@fadermex.com"}},
+		{"Promotion", "Promotion", "dynamic", "images/promo_2.png",
+			"other_url", arrays, models.Author{"asf", "asd@asf"}},
 		{"Promotion of dynamic", "Promotion+of+dynamic", "dynamic",
-			"some_url_image", "other_url", arrays, models.Author{"", ""}},
+			"images/promo_3.png", "other_url", arrays, models.Author{"jsj", "js@js"}},
+		{"title", "title", "month", "images/promo_1.png",
+			"some_url", arrays, models.Author{"Martin", "martin@fadermex.com"}},
+		{"some promotion", "Promotion", "dynamic", "images/promo_2.png",
+			"other_url", arrays, models.Author{"asf", "asd@asf"}},
+		{"of dynamic", "Promotion+of+dynamic", "dynamic",
+			"images/promo_3.png", "other_url", arrays, models.Author{"jsj", "js@js"}},
 	}
 
 	for _, promotion := range promotionList {
