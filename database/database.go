@@ -18,13 +18,13 @@ func Connect() {
 	session := dbSession()
 	var err error
 
-	err = concurrentPromotions(session)
-	//err = indexingPromotions(session)
-	//err = insertNestingPromotions(session)
-	//err = iteratePromotions(session)
-	//err = findPromotion(session)
 	//err = insertPromotions(session)
 	//err = updatePromotions(session)
+	//err = findPromotion(session)
+	//err = iteratePromotions(session)
+	//err = insertNestingPromotions(session)
+	//err = indexingPromotions(session)
+	err = concurrentPromotions(session)
 
 	if err != nil {
 		log.Printf("Error, go error: %v\n", err)
