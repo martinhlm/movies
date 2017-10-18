@@ -8,6 +8,7 @@ type Promotion struct {
 	Image    string   `bson:"image,omitempty"`
 	URL      string   `bson:"url,omitempty"`
 	Tags     []string `bson:"tags,omitempty"`
+	Author   Author   `bson:"author,omitempty"`
 }
 
 // Author model
