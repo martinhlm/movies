@@ -18,7 +18,8 @@ func Connect() {
 	session := dbSession()
 	var err error
 
-	err = insertNestingPromotions(session)
+	err = indexingPromotions(session)
+	//err = insertNestingPromotions(session)
 	err = iteratePromotions(session)
 	//err = findPromotion(session)
 	//err = insertPromotions(session)
@@ -48,9 +49,12 @@ func insertPromotions(session *mgo.Session) error {
 	arrays[0] = "one"
 
 	var promotionList = []models.Promotion{
-		{"promo titulo", "promo+titulo", "month", "some_image", "some_url", arrays},
-		{"Promotion title", "Promotion+title", "dynamic", "some_url_image", "other_url", arrays},
-		{"Promotion of dynamic", "Promotion+of+dynamic", "dynamic", "some_url_image", "other_url", arrays},
+		{"promo titulo", "promo+titulo", "month", "some_image", "some_url",
+			arrays, models.Author{"", ""}},
+		{"Promotion title", "Promotion+title", "dynamic", "some_url_image",
+			"other_url", arrays, models.Author{"", ""}},
+		{"Promotion of dynamic", "Promotion+of+dynamic", "dynamic",
+			"some_url_image", "other_url", arrays, models.Author{"", ""}},
 	}
 
 	for _, promotion := range promotionList {
@@ -128,4 +132,15 @@ func insertNestingPromotions(session *mgo.Session) error {
 		return err
 	}
 	return nil
+}
+
+func indexingPromotions(session *mgo.Session) error {
+	promotions := session.DB("local").C("promotions")
+	// root field
+	err := promotions.EnsureIndexKey("title")
+
+	// nested field
+	err = promotions.EnsureIndexKey("author.name")
+
+	return err
 }
