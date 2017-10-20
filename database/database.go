@@ -49,18 +49,18 @@ func insertPromotions(session *mgo.Session) error {
 	arrays := []string{"face", "skin"}
 
 	var promotionList = []models.Promotion{
-		{"Promotion title", "Promotion+title", "month", "images/promo_1.png",
+		{"Promotion title", "Promotion+title", "month", "../../data/images/promo_1.png",
 			"some_url", arrays, models.Author{"Martin", "martin@fadermex.com"}},
-		{"Promotion", "Promotion", "dynamic", "images/promo_2.png",
+		{"Promotion", "Promotion", "dynamic", "../../data/images/promo_2.png",
 			"other_url", arrays, models.Author{"asf", "asd@asf"}},
 		{"Promotion of dynamic", "Promotion+of+dynamic", "dynamic",
 			"images/promo_3.png", "other_url", arrays, models.Author{"jsj", "js@js"}},
-		{"title", "title", "month", "images/promo_1.png",
+		{"title", "title", "month", "../../data/images/promo_1.png",
 			"some_url", arrays, models.Author{"Martin", "martin@fadermex.com"}},
-		{"some promotion", "Promotion", "dynamic", "images/promo_2.png",
+		{"some promotion", "Promotion", "dynamic", "../../data/images/promo_2.png",
 			"other_url", arrays, models.Author{"asf", "asd@asf"}},
 		{"of dynamic", "Promotion+of+dynamic", "dynamic",
-			"images/promo_3.png", "other_url", arrays, models.Author{"jsj", "js@js"}},
+			"../../data/images/promo_3.png", "other_url", arrays, models.Author{"jsj", "js@js"}},
 	}
 
 	for _, promotion := range promotionList {
